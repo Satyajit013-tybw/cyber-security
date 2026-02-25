@@ -1,0 +1,37 @@
+{
+    "manifest_version": 3,
+    "name": "Sentinel Shield Browser Protector",
+    "version": "2.0",
+    "description": "Real-time threat detection, download scanning, and site blocking overlaid directly on the websites you visit.",
+    "incognito": "spanning",
+    "permissions": [
+        "activeTab",
+        "storage",
+        "scripting",
+        "downloads"
+    ],
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "action": {
+        "default_popup": "popup.html",
+        "default_title": "Sentinel Shield Settings"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "css": [
+                "content.css"
+            ],
+            "js": [
+                "translations.js",
+                "content.js"
+            ]
+        }
+    ]
+}

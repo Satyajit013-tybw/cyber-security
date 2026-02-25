@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentinel Shield Settings</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      width: 340px;
+      min-height: 460px;
+      background: radial-gradient(circle at top right, #1a1a2e, #0f0f1a);
+      color: #e2e8f0;
+      overflow-x: hidden;
+    }
+
+    .container {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+
+    .logo-glow {
+      position: absolute;
+      top: -50px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 100px;
+      background: rgba(56, 189, 248, 0.4);
+      filter: blur(50px);
+      z-index: 0;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: #94a3b8;
+      margin: 0;
+    }
+
+    .version-badge {
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      color: #7dd3fc;
+      font-weight: 700;
+      margin-left: auto;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #cbd5e1;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: white;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      outline: none;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    input:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+      background: rgba(30, 41, 59, 0.8);
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 11px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 4px;
+      box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(14, 165, 233, 0.4);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .status {
+      font-size: 12px;
+      text-align: center;
+      min-height: 16px;
+      color: #10b981;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .status.show {
+      opacity: 1;
+    }
+
+    /* ─── Divider ─── */
+    .divider {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.06);
+      margin: 4px 0;
+    }
+
+    /* ─── Toggle Switch ─── */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 0;
+    }
+
+    .toggle-label {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .toggle-label-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+
+    .toggle-label-desc {
+      font-size: 10px;
+      color: #64748b;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 40px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: rgba(100, 116, 139, 0.3);
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      height: 16px;
+      width: 16px;
+      left: 2px;
+      bottom: 2px;
+      background: white;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+
+    .toggle-switch input:checked+.toggle-slider {
+      background: rgba(16, 185, 129, 0.4);
+      border-color: rgba(16, 185, 129, 0.5);
+    }
+
+    .toggle-switch input:checked+.toggle-slider::before {
+      transform: translateX(18px);
+      background: #10b981;
+    }
+
+    /* ─── Blocked Sites ─── */
+    .section-header {
+      font-size: 11px;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .blocked-count {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+      font-weight: 700;
+    }
+
+    .blocked-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 120px;
+      overflow-y: auto;
+    }
+
+    .blocked-list::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .blocked-list::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+
+    .blocked-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 10px;
+      background: rgba(239, 68, 68, 0.05);
+      border: 1px solid rgba(239, 68, 68, 0.1);
+      border-radius: 8px;
+      font-size: 11px;
+    }
+
+    .blocked-domain {
+      color: #fca5a5;
+      font-family: 'Cascadia Code', 'Fira Code', monospace;
+      font-size: 11px;
+    }
+
+    .unblock-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #94a3b8;
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .unblock-btn:hover {
+      background: rgba(239, 68, 68, 0.15);
+      color: #fca5a5;
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    /* Language Selector */
+    .lang-select {
+      width: 100%;
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 8px;
+      padding: 9px 12px;
+      color: white;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      outline: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+    }
+
+    .lang-select:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+    }
+
+    .lang-select option {
+      background: #1e293b;
+      color: white;
+      padding: 8px;
+    }
+
+    .no-blocked {
+      font-size: 11px;
+      color: #475569;
+      text-align: center;
+      padding: 8px;
+    }
+
+    .clear-all-btn {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.15);
+      color: #fca5a5;
+      font-size: 11px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .clear-all-btn:hover {
+      background: rgba(239, 68, 68, 0.15);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="logo-glow"></div>
+  <div class="container">
+    <div class="header">
+      <div>
+        <h1 class="title">Sentinel Shield</h1>
+        <p class="subtitle">Browser Protector Gateway</p>
+      </div>
+      <span class="version-badge">v2.0</span>
+    </div>
+
+    <div class="form-group">
+      <label for="apiUrl">API URL</label>
+      <input type="text" id="apiUrl" placeholder="http://localhost:3000" />
+    </div>
+
+    <div class="form-group">
+      <label for="authToken">Auth Token</label>
+      <input type="password" id="authToken" placeholder="Paste your ss_token or Bearer" />
+    </div>
+
+    <button id="saveBtn" class="btn">Connect & Save</button>
+    <div id="status" class="status">Settings saved successfully!</div>
+
+    <div class="divider"></div>
+
+    <!-- Download Scanner Toggle -->
+    <div class="toggle-row">
+      <div class="toggle-label">
+        <span class="toggle-label-title">📥 Download Scanner</span>
+        <span class="toggle-label-desc">Scan files before you open them</span>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="downloadScanToggle" checked />
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Language Selector -->
+    <div class="form-group">
+      <label>🌐 Language</label>
+      <select class="lang-select" id="langSelect">
+        <option value="en">🇬🇧 English</option>
+        <option value="hi">🇮🇳 हिन्दी (Hindi)</option>
+        <option value="od">🇮🇳 ଓଡ଼ିଆ (Odia)</option>
+        <option value="es">🇪🇸 Español (Spanish)</option>
+        <option value="de">🇩🇪 Deutsch (German)</option>
+      </select>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Blocked Sites -->
+    <div class="section-header">
+      <span>🚫 Blocked Sites</span>
+      <span class="blocked-count" id="blockedCount">0</span>
+    </div>
+    <div class="blocked-list" id="blockedList">
+      <div class="no-blocked">No sites blocked yet</div>
+    </div>
+    <button class="clear-all-btn" id="clearAllBtn" style="display: none;">Clear All Blocked Sites</button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+
+</html>
